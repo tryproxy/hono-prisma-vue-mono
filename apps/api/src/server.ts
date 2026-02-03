@@ -1,3 +1,4 @@
+import "./tg-bot";
 import { app } from "./index";
 
 const port = Number(process.env.PORT ?? 3000);
