@@ -1,0 +1,27 @@
+# Node/Bun
+node_modules/
+.bun/
+bun.lockb
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env files
+.env
+.env.*
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Build/test outputs
+dist/
+build/
+coverage/
+.cache/
+
+# Prisma
+apps/api/src/generated/
