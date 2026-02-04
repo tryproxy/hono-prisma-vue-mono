@@ -1,5 +1,6 @@
 import { Bot, Context, InlineKeyboard, session, SessionFlavor } from "grammy";
 import { messages } from "./i18n/en";
+import { prisma } from "./db";
 
 type BotStep = {
   step: "idle" | "item" | "qty" | "confirm";
@@ -72,10 +73,10 @@ bot.command("webapp", async (ctx) => {
     "https://hono-prisma-vue-mono.vercel.app/",
   );
 
-  await ctx.reply("?", { reply_markup: kb });
+  await ctx.reply("Your order", { reply_markup: kb });
 });
 
-bot.on("message", (ctx) => {
+bot.on("message", async (ctx) => {
   const input = ctx.message?.text?.trim();
   if (!input) return;
 
@@ -104,8 +105,32 @@ bot.on("message", (ctx) => {
   if (step === "confirm") {
     if (validateSubmitMsg(input)) {
       // API
+      const { item, qty } = ctx.session.answer as {
+        item: {
+          label: string;
+          name: string;
+          id: number;
+        };
+        qty: string;
+      };
+      await prisma.order.create({
+        data: {
+          userId: String(ctx.from?.id ?? "unknown"),
+          username: ctx?.from?.username,
+          item: item.name,
+          qty: Number(qty),
+        },
+      });
+
       ctx.session = { step: "idle", answer: {} };
-      return ctx.reply(messages.submit);
+
+      const reply = await fetch(`${API_BASE_URL}/api/orders`).then((r) =>
+        r.json(),
+      );
+      return ctx.reply(`
+        ${messages.submit} \n
+        ${JSON.stringify(reply.order)}
+        `);
     }
 
     ctx.session = { step: "idle", answer: {} };
@@ -130,10 +155,10 @@ await bot.api.setMyCommands([
   //   command: "ping",
   //   description: "Ping DB",
   // },
-  // {
-  //   command: "webapp",
-  //   description: "Open web app",
-  // },
+  {
+    command: "webapp",
+    description: "Open web app",
+  },
 ]);
 
 bot.start();

@@ -11,3 +11,12 @@ model Ping {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 }
+
+model Order {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  userId    String
+  username  String?
+  item      String
+  qty       Int
+}

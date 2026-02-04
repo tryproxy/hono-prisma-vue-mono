@@ -9,3 +9,10 @@ app.get("/api/db-ping", async (c) => {
   const row = await prisma.ping.create({ data: {} });
   return c.json({ ok: true, ping: row });
 });
+
+app.get("/api/orders", async (c) => {
+  const order = await prisma.order.findFirst({
+    orderBy: { createdAt: "desc" },
+  });
+  return c.json({ ok: true, order });
+});
