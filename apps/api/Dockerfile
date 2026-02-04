@@ -10,6 +10,7 @@ COPY prisma.config.ts ./prisma.config.ts
 COPY tsconfig.json ./tsconfig.json
 COPY src ./src
 
+ENV DATABASE_URL=postgresql://user:pass@localhost:5432/db?schema=public
 RUN bunx prisma generate
 
 ENV NODE_ENV=production
