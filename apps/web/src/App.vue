@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { API_BASE_URL } from "./lib/config";
 
 const hello = ref("loading...");
 const ping = ref("loading...");
 const order = ref('loading...')
 
 onMounted(async () => {
-  const h = await fetch("/api/hello").then((r) => r.json());
+  const h = await fetch(`${API_BASE_URL}/api/hello`).then((r) => r.json());
   hello.value = h.message;
 
-  const p = await fetch("/api/db-ping").then((r) => r.json());
+  const p = await fetch(`${API_BASE_URL}/api/db-ping`).then((r) => r.json());
+
   ping.value = `${p.ping.id} @ ${p.ping.createdAt}`;
 
-  const o = await fetch('/api/orders').then((r) => r.json())
+  const o = await fetch(`${API_BASE_URL}/api/orders`).then((r) => r.json())
   order.value = `
     ${o.order.username}
     ${o.order.item}
