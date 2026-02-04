@@ -6,22 +6,23 @@ export const messages = {
       `Step 3/3: Confirm Order? (Yes/No) ${text.item.name} - ${text.qty}`,
   },
   confirm: {
-    yesList: ["Yes", "ye", "y", "пися", "попа"],
+    yesResponses: ["yes", "ye", "y"],
+    noResponses: ["no", "n", "cancel"],
     yes: "Yes",
     no: "No",
   },
   submit: "Submitted.",
   cancel: "Canceled. Type /create again!",
-  wildcard: "пися попа",
+  wildcard: "Try /create",
   product: [
     {
       label: "item:A",
-      name: "пися",
+      name: "ItemA",
       id: 0,
     },
     {
       label: "item:B",
-      name: "попа",
+      name: "ItemB",
       id: 1,
     },
   ],

@@ -98,12 +98,16 @@ bot.on("message", async (ctx) => {
     return ctx.reply(`${messages.steps.qty(ctx.session.answer)}`);
   }
 
-  function validateSubmitMsg(msg: string) {
-    return messages.confirm.yesList.includes(msg.toLowerCase());
+  function isYesResponse(msg: string) {
+    return messages.confirm.yesResponses.includes(msg.toLowerCase());
+  }
+
+  function isNoResponse(msg: string) {
+    return messages.confirm.noResponses.includes(msg.toLowerCase());
   }
 
   if (step === "confirm") {
-    if (validateSubmitMsg(input)) {
+    if (isYesResponse(input)) {
       // API
       const { item, qty } = ctx.session.answer as {
         item: {
@@ -131,6 +135,11 @@ bot.on("message", async (ctx) => {
         ${messages.submit} \n
         ${JSON.stringify(reply.order)}
         `);
+    }
+
+    if (isNoResponse(input)) {
+      ctx.session = { step: "idle", answer: {} };
+      return ctx.reply(messages.cancel);
     }
 
     ctx.session = { step: "idle", answer: {} };
