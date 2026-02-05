@@ -1,6 +1,7 @@
 import { Bot, Context, InlineKeyboard, session, SessionFlavor } from "grammy";
 import { messages } from "./i18n/en";
 import { prisma } from "./db";
+import { initWsLogger, sendLog } from "./ws-logger";
 
 type BotStep = {
   step: "idle" | "item" | "qty" | "confirm";
@@ -14,6 +15,25 @@ const API_BASE_URL = process.env.API_BASE_URL ?? "http://localhost:3000";
 if (!token) throw new Error("TELEGRAM_BOT_TOKEN is not set");
 const bot = new Bot<BotContext>(token); // (https://t.me/BotFather)
 
+initWsLogger();
+
+bot.use(async (ctx, next) => {
+  const from = ctx.from;
+  const text = ctx.message?.text?.trim();
+  const data = ctx.callbackQuery?.data;
+
+  sendLog({
+    ts: new Date().toISOString(),
+    kind: text ? "message" : data ? "callback" : "update",
+    userId: from?.id,
+    username: from?.username,
+    text,
+    data,
+  });
+
+  await next();
+});
+
 bot.use(
   session({
     initial: (): BotStep => ({
@@ -22,6 +42,26 @@ bot.use(
     }),
   }),
 );
+
+bot.use(async (ctx, next) => {
+  const from = ctx.from;
+  const user = from
+    ? `id:${from.id} user:${from.username ?? "unknown"}`
+    : "unknown-user";
+  const text = ctx.message?.text?.trim();
+  const cb = ctx.callbackQuery?.data;
+  const kind = text ? "message" : cb ? "callback" : "update";
+
+  if (text) {
+    console.log(`[tg] ${kind} ${user} text=${JSON.stringify(text)}`);
+  } else if (cb) {
+    console.log(`[tg] ${kind} ${user} data=${JSON.stringify(cb)}`);
+  } else {
+    console.log(`[tg] ${kind} ${user}`);
+  }
+
+  await next();
+});
 
 bot.command("create", async (ctx) => {
   ctx.session = { step: "item", answer: {} };
@@ -70,6 +110,7 @@ bot.command("ping", async (ctx) => {
 bot.command("webapp", async (ctx) => {
   const kb = new InlineKeyboard().webApp(
     "Open web app",
+    // "https://admin.aso.market/?access_token=XXX",
     "https://hono-prisma-vue-mono.vercel.app/",
   );
 
@@ -108,7 +149,6 @@ bot.on("message", async (ctx) => {
 
   if (step === "confirm") {
     if (isYesResponse(input)) {
-      // API
       const { item, qty } = ctx.session.answer as {
         item: {
           label: string;
@@ -128,13 +168,20 @@ bot.on("message", async (ctx) => {
 
       ctx.session = { step: "idle", answer: {} };
 
-      const reply = await fetch(`${API_BASE_URL}/api/orders`).then((r) =>
-        r.json(),
-      );
-      return ctx.reply(`
-        ${messages.submit} \n
-        ${JSON.stringify(reply.order)}
-        `);
+      await ctx.reply(messages.submit);
+
+      try {
+        const reply = await fetch(`${API_BASE_URL}/api/orders`).then((r) =>
+          r.json(),
+        );
+        await ctx.reply(`
+          ${messages.onSubmitSuccess} \n
+          ${JSON.stringify(reply.order)}
+          `);
+      } catch (err) {
+        console.error("orders fetch has failed with:", err);
+      }
+      return;
     }
 
     if (isNoResponse(input)) {

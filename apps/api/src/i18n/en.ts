@@ -11,6 +11,7 @@ export const messages = {
     yes: "Yes",
     no: "No",
   },
+  onSubmitSuccess: "Your order",
   submit: "Submitted.",
   cancel: "Canceled. Type /create again!",
   wildcard: "Try /create",
