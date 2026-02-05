@@ -92,7 +92,16 @@ async function handleItemChoice(ctx: BotContext, type: "A" | "B") {
   await ctx.reply(messages.steps.item);
 }
 
-bot.command("start", (ctx) => ctx.reply("yo"));
+bot.command("start", (ctx) => {
+  const payload = ctx.match?.trim(); // from_channel
+  if (payload === "from_channel") {
+    const user = ctx.from?.username;
+    ctx.reply(`Welcome to DashQ Bot, ${user}!`);
+    sendWebAppButton(ctx);
+    return;
+  }
+  return ctx.reply("yo");
+});
 
 // bot.command("hello", async (ctx) => {
 //   const from = `id:${ctx.from?.id} user:${ctx.from?.username}`;
@@ -107,7 +116,7 @@ bot.command("ping", async (ctx) => {
   ctx.reply(`${from} \n ${reply}`);
 });
 
-bot.command("webapp", async (ctx) => {
+async function sendWebAppButton(ctx: BotContext) {
   const kb = new InlineKeyboard().webApp(
     "Open web app",
     // "https://admin.aso.market/?access_token=XXX",
@@ -115,6 +124,31 @@ bot.command("webapp", async (ctx) => {
   );
 
   await ctx.reply("Your order", { reply_markup: kb });
+}
+
+bot.command("webapp", async (ctx) => {
+  sendWebAppButton(ctx);
+});
+
+bot.command("open", async (ctx) => {
+  const user = ctx.from?.id;
+  await ctx.reply("admin.aso.market", {
+    reply_markup: {
+      inline_keyboard: [
+        [
+          {
+            text: "Open as mini app",
+            // url: "https://hono-prisma-vue-mono.vercel.app/",
+            // url: "https://t.me/dashq_bot_bot/front",
+            url: "t.me/dashq_bot_bot/adminaso",
+            // url: "t.me/dashq_bot_bot/devtoken",
+            // url: "https://admin.aso.market",
+            // url: "https://t.me/dashq_bot_bot/?start=from_channel",
+          },
+        ],
+      ],
+    },
+  });
 });
 
 bot.on("message", async (ctx) => {
@@ -194,27 +228,48 @@ bot.on("message", async (ctx) => {
   }
 });
 
-await bot.api.setMyCommands([
-  {
-    command: "create",
-    description: messages.wildcard,
-  },
-  // {
-  //   command: "start",
-  //   description: "Start the bot",
-  // },
-  // {
-  //   command: "hello",
-  //   description: "api/hello",
-  // },
-  // {
-  //   command: "ping",
-  //   description: "Ping DB",
-  // },
-  {
-    command: "webapp",
-    description: "Open web app",
-  },
-]);
+// await bot.api.setChatMenuButton({
+//   menu_button: {
+//     type: "commands",
+//   },
+// });
+
+// await bot.api.setChatMenuButton({
+//   menu_button: {
+//     type: "web_app",
+//     text: "Open web app!",
+//     web_app: { url: "https://t.me/dashq_bot_bot/front" },
+//   },
+// });
+
+await bot.api.setMyCommands(
+  [
+    {
+      command: "create",
+      description: messages.wildcard,
+    },
+    {
+      command: "open",
+      description: messages.open,
+    },
+    {
+      command: "start",
+      description: "Welcome to DashQ Bot!",
+    },
+    // {
+    //   command: "hello",
+    //   description: "api/hello",
+    // },
+    // {
+    //   command: "ping",
+    //   description: "Ping DB",
+    // },
+    {
+      command: "webapp",
+      description: "Open web app",
+    },
+  ],
+  { scope: { type: "all_chat_administrators" } },
+);
 
 bot.start();
