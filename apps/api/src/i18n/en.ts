@@ -15,6 +15,7 @@ export const messages = {
   submit: "Submitted.",
   cancel: "Canceled. Type /create again!",
   wildcard: "Try /create",
+  open: "open web site",
   product: [
     {
       label: "item:A",
