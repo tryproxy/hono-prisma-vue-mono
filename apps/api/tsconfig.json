@@ -9,7 +9,9 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true
+    "noEmit": true,
   },
-  "include": ["src"]
+  "include": [
+    "src"
+, "../packages/config.ts", "../packages/config.ts"  ],
 }

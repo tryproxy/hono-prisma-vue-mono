@@ -2,11 +2,21 @@
 import { onMounted, ref } from "vue";
 import { API_BASE_URL } from "./lib/config";
 
+
+type HelloRes = { ok: boolean; message: string };
+type PingRes = { ok: boolean; ping: { id: number; createdAt: string } };
+type OrderRes = {
+  ok: boolean;
+  order: { username: string; item: string; qty: number; createdAt: string } | null;
+};
+
 const hello = ref("loading...");
 const ping = ref("loading...");
 const order = ref('loading...')
 const hasInitData = ref(false)
 const initDataJson = ref<string>("")
+
+
 
 onMounted(async () => {
   const initData = window.Telegram?.WebApp?.initData ?? ""
@@ -28,19 +38,25 @@ onMounted(async () => {
     initDataJson.value = JSON.stringify(data, null, 2)
   }
 
-  const h = await fetch(`${API_BASE_URL}/api/hello`).then((r) => r.json());
-  hello.value = h.message;
+  const fetchJson = async <T>(endpoint: string) => {
+    const res = await fetch(endpoint);
+    if (!res.ok) {
+      throw new Error(`Request failed with status ${res.status}`);
+    }
+    return res.json() as Promise<T>;
+  }
 
-  const p = await fetch(`${API_BASE_URL}/api/db-ping`).then((r) => r.json());
+  const [h, p, o] = await Promise.allSettled([
+    fetchJson<HelloRes>(`${API_BASE_URL}/api/hello`),
+    fetchJson<PingRes>(`${API_BASE_URL}/api/db-ping`),
+    fetchJson<OrderRes>(`${API_BASE_URL}/api/orders`),
+  ]);
 
-  ping.value = `${p.ping.id} @ ${p.ping.createdAt}`;
-
-  const o = await fetch(`${API_BASE_URL}/api/orders`).then((r) => r.json())
-  order.value = `
-    ${o.order.username}
-    ${o.order.item}
-    ${o.order.qty}
-    ${o.order.createdAt}`
+  hello.value = h.status === "fulfilled" ? h.value.message : "Error";
+  ping.value = p.status === "fulfilled" ? `${p.value.ping.id} @ ${p.value.ping.createdAt}` : "Error"
+  order.value = o.status === "fulfilled"
+    ? ` ${o.value.order?.username} ${o.value.order?.item} ${o.value.order?.qty} ${o.value.order?.createdAt} `
+    : "Error";
 });
 </script>
 
@@ -53,7 +69,7 @@ onMounted(async () => {
         {{ initDataJson }}
       </pre>
       <div><b>hello:</b> {{ hello }}</div>
-      <!-- <div style="margin-top: 8px;"><b>db ping:</b> {{ ping }}</div> -->
+      <div style="margin-top: 8px;"><b>db ping:</b> {{ ping }}</div>
       <div style="margin-top: 8px;"><b>order:</b> {{ order }}</div>
     </div>
   </div>

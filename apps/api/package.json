@@ -6,6 +6,7 @@
     "dev": "bun --watch src/server.ts"
   },
   "dependencies": {
+    "@hono/swagger-ui": "^0.5.3",
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "grammy": "^1.39.3",
