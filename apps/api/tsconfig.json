@@ -12,6 +12,7 @@
     "noEmit": true,
   },
   "include": [
-    "src"
-, "../packages/config.ts", "../packages/config.ts"  ],
+    "src",
+  ],
+
 }

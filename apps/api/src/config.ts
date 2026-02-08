@@ -1,7 +1,8 @@
 export const ENDPOINTS = {
-  docs: "/api/docs",
-  hello: "/api/hello",
-  dbPing: "/api/db-ping",
   orders: "/api/orders",
+  order: `/api/order/{id}`,
+  docs: "/api/docs",
   openapi: "/api/openapi.json",
+  ping: "/api/ping",
+  health: "/api/health",
 };

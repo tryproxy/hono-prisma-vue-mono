@@ -139,8 +139,8 @@ bot.command("open", async (ctx) => {
           {
             text: "Open as mini app",
             // url: "https://hono-prisma-vue-mono.vercel.app/",
-            // url: "https://t.me/dashq_bot_bot/front",
-            url: "t.me/dashq_bot_bot/adminaso",
+            url: "https://t.me/dashq_bot_bot/front",
+            // url: "t.me/dashq_bot_bot/adminaso",
             // url: "t.me/dashq_bot_bot/devtoken",
             // url: "https://admin.aso.market",
             // url: "https://t.me/dashq_bot_bot/?start=from_channel",
