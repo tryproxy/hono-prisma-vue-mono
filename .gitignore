@@ -26,6 +26,3 @@ coverage/
 
 # Prisma
 apps/api/src/generated/
-
-# local
-apps/local
