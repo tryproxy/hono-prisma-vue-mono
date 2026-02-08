@@ -18,12 +18,11 @@ Desktop web app lives in a separate repository:
 
 ## Repository Layout
 
-```text
-apps/
-  api/    backend service, OpenAPI docs, Telegram bot
-  web/    Telegram mini-app frontend
-  local/  local tooling (WebSocket receiver)
-```
+| Path | Purpose |
+| --- | --- |
+| `apps/api` | Backend service, OpenAPI docs, Telegram bot |
+| `apps/web` | Telegram mini-app frontend |
+| `apps/local` | Local tooling (WebSocket receiver) |
 
 ## Prerequisites
 
@@ -78,13 +77,18 @@ cd apps/local && bun run dev
 
 ## API Endpoints
 
-- `GET /api/ping`
-- `GET /api/health`
-- `GET /api/orders`
-- `POST /api/orders`
-- `GET /api/order/{id}`
-- `GET /api/docs`
-- `GET /api/openapi.json`
+| Method | Path |
+| --- | --- |
+| `GET` | `/api/ping` |
+| `GET` | `/api/health` |
+| `GET` | `/api/orders` |
+| `POST` | `/api/orders` |
+| `GET` | `/api/order/{id}` |
+| `GET` | `/api/docs` |
+| `GET` | `/api/openapi.json` |
+
+- [Swagger UI](https://hono-prisma-vue-grammy.onrender.com/api/docs)
+
 
 ## Environment Files
 

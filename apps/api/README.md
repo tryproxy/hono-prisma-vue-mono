@@ -43,6 +43,10 @@ bunx prisma generate
 - `GET /api/docs`
 - `GET /api/openapi.json`
 
+## Swagger/OpenAPI
+- [Swagger UI (deployed)](https://hono-prisma-vue-grammy.onrender.com/api/docs)
+- [OpenAPI JSON (deployed)](https://hono-prisma-vue-grammy.onrender.com/api/openapi.json)
+
 ## Deployment
 
 - [Backend API](https://hono-prisma-vue-grammy.onrender.com)
