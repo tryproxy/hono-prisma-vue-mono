@@ -3,9 +3,13 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { cors } from "hono/cors";
 import { registerRestGateway } from "./gateway/rest";
 import { ENDPOINTS } from "./gateway/rest/constants";
+import { registerHealthChecksInfrastructure } from "./infrastructure/prisma/register-health-checker";
+import { registerRestDocs } from "./gateway/rest/openAPI/register-rest-docs";
 
 export const app = new OpenAPIHono();
+registerHealthChecksInfrastructure();
 registerRestGateway(app);
+registerRestDocs(app);
 
 app.use(
   "/api/*",
@@ -16,14 +20,3 @@ app.use(
     ],
   }),
 );
-
-app.doc(ENDPOINTS.openapi, {
-  openapi: "3.0.0",
-  info: {
-    title: "API Documentation",
-    version: "1.0.0",
-    description: "API documentation for your service",
-  },
-});
-
-app.use(ENDPOINTS.docs, swaggerUI({ url: ENDPOINTS.openapi }));
