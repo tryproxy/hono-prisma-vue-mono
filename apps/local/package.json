@@ -1,0 +1,13 @@
+{
+  "name": "local",
+  "private": true,
+  "scripts": {
+    "dev": "bun run log-receiver.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
