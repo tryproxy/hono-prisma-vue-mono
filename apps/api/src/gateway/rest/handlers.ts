@@ -1,34 +1,24 @@
-import { prisma } from "./db";
+import { prisma } from "../../infrastructure/prisma/client";
 import { RouteHandler } from "@hono/zod-openapi";
 import {
+  pingRoute,
   createOrderRoute,
+  listOrdersRoute,
   getOrderByIdRoute,
   healthRoute,
-  listOrdersRoute,
-  pingRoute,
 } from "./routes";
-
-export const pingHandler: RouteHandler<typeof pingRoute> = (ctx) =>
-  ctx.json({ ok: true, message: "pong" }, 200);
+import { createOrderWorkflow } from "../../core/workflow/create-order-workflow";
 
 export const createOrderHandler: RouteHandler<typeof createOrderRoute> = async (
   ctx,
 ) => {
-  const { userId, username, item, qty } = ctx.req.valid("json");
+  const input = ctx.req.valid("json");
+  const order = await createOrderWorkflow(input);
 
-  const created = await prisma.order.create({
-    data: { userId, username, item, qty },
-  });
-
-  return ctx.json(
-    {
-      ok: true,
-      order: { ...created, createdAt: created.createdAt.toISOString() },
-    },
-    201,
-  );
+  return ctx.json({ ok: true, order }, 201);
 };
 
+// TODO create workflows and steps
 export const listOrdersHandler: RouteHandler<typeof listOrdersRoute> = async (
   ctx,
 ) => {
@@ -70,3 +60,6 @@ export const healthHandler: RouteHandler<typeof healthRoute> = async (ctx) => {
     return ctx.json({ ok: false, db: "down" }, 503);
   }
 };
+
+export const pingHandler: RouteHandler<typeof pingRoute> = (ctx) =>
+  ctx.json({ ok: true, message: "pong" }, 200);

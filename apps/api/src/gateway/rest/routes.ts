@@ -1,14 +1,14 @@
 import { createRoute } from "@hono/zod-openapi";
-import { ENDPOINTS } from "./config";
+import { ENDPOINTS } from "./constants";
 import {
   CreateOrderRequestSchema,
   CreateOrderResponseSchema,
   GetOrderParamsSchema,
   GetOrderResponseSchema,
-  PingResponseSchema,
-  ListOrdersResponseSchema,
   HealthResponseSchema,
-} from "./schemas";
+  ListOrdersResponseSchema,
+  PingResponseSchema,
+} from "../../core/models/schemas";
 
 export const listOrdersRoute = createRoute({
   method: "get",

@@ -1,23 +1,11 @@
 import { swaggerUI } from "@hono/swagger-ui";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { cors } from "hono/cors";
-import { ENDPOINTS } from "./config";
-import {
-  createOrderHandler,
-  getOrderByIdHandler,
-  healthHandler,
-  listOrdersHandler,
-  pingHandler,
-} from "./handlers";
-import {
-  createOrderRoute,
-  getOrderByIdRoute,
-  healthRoute,
-  listOrdersRoute,
-  pingRoute,
-} from "./routes";
+import { registerRestGateway } from "./gateway/rest";
+import { ENDPOINTS } from "./gateway/rest/constants";
 
 export const app = new OpenAPIHono();
+registerRestGateway(app);
 
 app.use(
   "/api/*",
@@ -28,12 +16,6 @@ app.use(
     ],
   }),
 );
-
-app.openapi(pingRoute, pingHandler);
-app.openapi(createOrderRoute, createOrderHandler);
-app.openapi(listOrdersRoute, listOrdersHandler);
-app.openapi(getOrderByIdRoute, getOrderByIdHandler);
-app.openapi(healthRoute, healthHandler);
 
 app.doc(ENDPOINTS.openapi, {
   openapi: "3.0.0",
