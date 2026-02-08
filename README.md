@@ -99,12 +99,11 @@ Set `VITE_API_BASE_URL` in web env to your backend URL (default: `http://localho
 
 ## Architecture Notes
 
-Architecture direction is documented in `apps/api/ARCHITECTURE.md`:
+Architecture direction (backend) is documented in `apps/api/ARCHITECTURE.md`:
 - `core`
 - `infrastructure`
 - `gateway`
 - `lib`
-
 
 ## Deployment
 
