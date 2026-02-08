@@ -1,7 +1,7 @@
 import { Bot, Context, InlineKeyboard, session, SessionFlavor } from "grammy";
-import { messages } from "./i18n/en";
-import { prisma } from "./db";
-import { initWsLogger, sendLog } from "./ws-logger";
+import { messages } from "../i18n/en";
+import { prisma } from "../db";
+import { initWsLogger, sendLog } from "../ws-logger";
 
 type BotStep = {
   step: "idle" | "item" | "qty" | "confirm";
@@ -110,9 +110,9 @@ bot.command("start", (ctx) => {
 // });
 
 bot.command("ping", async (ctx) => {
-  const data = await fetch(`${API_BASE_URL}/api/db-ping`).then((r) => r.json());
+  const data = await fetch(`${API_BASE_URL}/api/ping`).then((r) => r.json());
   const from = `id:${ctx.from?.id} user:${ctx.from?.username}`;
-  const reply = `DB: ${data.ping.id} @ ${data.ping.createdAt}`;
+  const reply = `${data.ping.message}`;
   ctx.reply(`${from} \n ${reply}`);
 });
 
@@ -256,14 +256,6 @@ await bot.api.setMyCommands(
       command: "start",
       description: "Welcome to DashQ Bot!",
     },
-    // {
-    //   command: "hello",
-    //   description: "api/hello",
-    // },
-    // {
-    //   command: "ping",
-    //   description: "Ping DB",
-    // },
     {
       command: "webapp",
       description: "Open web app",
