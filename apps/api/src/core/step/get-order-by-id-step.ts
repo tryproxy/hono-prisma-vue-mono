@@ -1,4 +1,4 @@
-import { prisma } from "../../infrastructure/prisma/client";
+import { prisma } from "@/infrastructure/prisma/client";
 import { GetOrderByIdInput } from "../models/types";
 
 export const getOrderByIdStep = async (input: GetOrderByIdInput) =>

@@ -1,4 +1,4 @@
-import { prisma } from "../../infrastructure/prisma/client";
+import { prisma } from "@/infrastructure/prisma/client";
 
 export const listOrdersStep = async () =>
   await prisma.order.findMany({

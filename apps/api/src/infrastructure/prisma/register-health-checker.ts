@@ -1,4 +1,4 @@
-import { registerDbHealthChecker } from "../../lib/db";
+import { registerDbHealthChecker } from "@/lib/db";
 import { prisma } from "./client";
 
 export const registerHealthChecksInfrastructure = (): void => {

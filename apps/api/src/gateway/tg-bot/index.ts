@@ -1,7 +1,7 @@
 import { Bot, Context, InlineKeyboard, session, SessionFlavor } from "grammy";
 import { messages } from "../i18n/en";
-import { prisma } from "../../infrastructure/prisma/client";
 import { initWsLogger, sendLog } from "../../lib/ws-logger";
+import { prisma } from "@/infrastructure/prisma/client";
 
 type BotStep = {
   step: "idle" | "item" | "qty" | "confirm";

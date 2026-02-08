@@ -1,8 +1,8 @@
-import { createRoute } from "@hono/zod-openapi";
 import {
-  PingResponseSchema,
   HealthResponseSchema,
-} from "../../../core/models/schemas";
+  PingResponseSchema,
+} from "@/core/models/schemas";
+import { createRoute } from "@hono/zod-openapi";
 import { ENDPOINTS } from "../constants";
 
 export const pingRoute = createRoute({

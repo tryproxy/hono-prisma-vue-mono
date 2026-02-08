@@ -1,5 +1,5 @@
+import { checkDbHealth } from "@/lib/db";
 import { RouteHandler } from "@hono/zod-openapi";
-import { checkDbHealth } from "../../../lib/db";
 import { healthRoute, pingRoute } from "./routes";
 
 export const healthHandler: RouteHandler<typeof healthRoute> = async (ctx) => {

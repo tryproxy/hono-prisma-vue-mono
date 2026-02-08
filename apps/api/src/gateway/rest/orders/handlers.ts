@@ -1,7 +1,7 @@
+import { createOrderWorkflow } from "@/core/workflow/create-order-workflow";
+import { getOrderByIdWorkflow } from "@/core/workflow/get-order-by-id-workflow";
+import { listOrdersWorkflow } from "@/core/workflow/list-orders-workflow";
 import { RouteHandler } from "@hono/zod-openapi";
-import { createOrderWorkflow } from "../../../core/workflow/create-order-workflow";
-import { getOrderByIdWorkflow } from "../../../core/workflow/get-order-by-id-workflow";
-import { listOrdersWorkflow } from "../../../core/workflow/list-orders-workflow";
 import { createOrderRoute, getOrderByIdRoute, listOrdersRoute } from "./routes";
 
 export const createOrderHandler: RouteHandler<typeof createOrderRoute> = async (
